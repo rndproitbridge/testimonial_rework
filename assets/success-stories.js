@@ -14,16 +14,19 @@
   function feature(row, index) {
     const copy = C.STORY_COPY[row.key] || {headline:row.headline || row.role, intro:row.company ? `${row.name} shares a career step at ${row.company}.` : row.note};
     const lead = index === 0 && row.photo;
-    return `<article class="feature-story${lead ? ' is-lead' : ''}">${lead ? `<div class="feature-portrait"><img src="${e(row.photo)}" width="640" height="640" alt="${e(row.name)}" loading="lazy"><div class="portrait-name"><strong>${e(row.name)}</strong><span>${e(row.role)}${row.company ? ' · ' + e(row.company) : ''}</span></div></div>` : ''}<div class="feature-content"><div class="feature-meta"><span>JOURNEY ${String(index+1).padStart(2,'0')}</span><span class="outcome-type">${e(row.outcome)}</span></div><h3>${e(copy.headline)}</h3><p class="feature-description">${e(copy.intro)}</p><div class="feature-facts">${fact(row.from ? 'Starting point' : 'Learning track', row.from || row.program)}${fact('Next chapter', row.role + (row.company ? ' · ' + row.company : ''))}${fact(row.from ? 'Learning focus' : 'Skills studied', row.modules || (row.key === 'santosh' ? 'RAG, Word2Vec and related concepts, mentioned in his feedback.' : row.program), true)}</div>${row.text ? `<blockquote class="feature-quote">“${e(row.text)}”</blockquote>` : ''}${!lead ? person(row) : ''}<div class="feature-actions"><button class="text-link" type="button" data-story="${e(row.id)}">Read the shared story <span aria-hidden="true">↗</span></button><span>${row.proof ? 'Original shared record available' : 'Learner-shared experience'}</span></div></div></article>`;
+    return `<article class="feature-story${lead ? ' is-lead' : ''}">${lead ? `<div class="feature-portrait"><img src="${e(row.photo)}" width="640" height="640" alt="${e(row.name)}" loading="lazy"><div class="portrait-name"><strong>${e(row.name)}</strong><span>${e(row.role)}${row.company ? ' · ' + e(row.company) : ''}</span></div></div>` : ''}<div class="feature-content"><div class="feature-meta"><span class="outcome-type">${e(row.outcome)}</span></div><h3>${e(copy.headline)}</h3><p class="feature-description">${e(copy.intro)}</p><div class="feature-facts">${fact(row.from ? 'Starting point' : 'Learning track', row.from || row.program)}${fact('Next chapter', row.role + (row.company ? ' · ' + row.company : ''))}${fact(row.from ? 'Learning focus' : 'Skills studied', row.modules || (row.key === 'santosh' ? 'RAG, Word2Vec and related concepts, mentioned in his feedback.' : row.program), true)}</div>${row.text ? `<blockquote class="feature-quote">“${e(row.text)}”</blockquote>` : ''}${!lead ? person(row) : ''}<div class="feature-actions"><button class="text-link" type="button" data-story="${e(row.id)}">Read the shared story <span aria-hidden="true">↗</span></button></div></div></article>`;
   }
   function renderImpact() {
     const counts = D.metrics(state.records,C), impact = D.impact(state.records,C);
     $('sampleNotice').hidden = impact.mode !== 'sample';
-    $('metricGrid').innerHTML = impact.items.map(([value,label],i) => `<div class="metric"><span class="metric-index">0${i+1}</span><strong class="metric-value">${e(value)}</strong><span class="metric-label">${e(label)}</span></div>`).join('');
+    $('metricGrid').innerHTML = impact.items.map(([value,label],i) => `<div class="metric"><strong class="metric-value">${e(value)}</strong><span class="metric-label">${e(label)}</span></div>`).join('');
     $('impactContext').textContent = impact.context;
-    $('collectionNote').textContent = `On this page: ${counts.offers} career stories · ${counts.reviews} written reviews · ${counts.videos} video experiences. Each format is counted separately; these are not unique-learner totals.`;
+    $('collectionNote').hidden=true;
     $('outcomeList').innerHTML = counts.groups.map((group,i) => `<button type="button" class="outcome-row" data-role="${e(group.id)}" aria-label="Explore ${group.count} ${e(group.label)} career stories"><span class="outcome-index">0${i+1}</span><span class="outcome-label"><strong>${e(group.label)}</strong><span class="outcome-description">${e(group.description)}</span></span><span class="outcome-count">${group.count}<small>${group.count === 1 ? 'story' : 'stories'}</small></span><span class="outcome-arrow" aria-hidden="true">↗</span></button>`).join('');
-    $('employerNames').innerHTML = counts.employers.map(name => `<span>${e(name)}</span>`).join('');
+    const logos=counts.employers.filter(name=>C.EMPLOYER_LOGOS?.[name]);
+    const logoGroup=duplicate=>'<div class="employer-logo-group"'+(duplicate?' aria-hidden="true"':' role="list"')+'>'+logos.map(name=>'<div class="employer-logo"'+(duplicate?'':' role="listitem"')+'><img src="'+e(C.EMPLOYER_LOGOS[name].src)+'" alt="'+(duplicate?'':e(name))+'" width="240" height="80" loading="lazy"></div>').join('')+'</div>';
+    $('employerNames').innerHTML='<div class="employer-logo-track">'+logoGroup(false)+logoGroup(true)+'</div>';
+
     const backgrounds = [...C.BACKGROUNDS,{id:'unspecified',label:'Not specified'}];
     $('backgroundCounts').innerHTML = backgrounds.map(group => ({...group,count:recordsOf('offer').filter(row => row.cat === group.id).length})).filter(group => group.count).map(group => `<button type="button" data-background="${e(group.id)}"><strong>${group.count}</strong><span>${e(group.label)}</span><span aria-hidden="true">↗</span></button>`).join('');
   }
@@ -36,13 +39,6 @@
     $('careerGrid').innerHTML = selected.length ? selected.map(row => `<article class="career-card"><span class="career-background">${e(catLabel(row.cat))}</span><h3>${e(row.name)}</h3><p class="career-role">${e(row.role)}</p><p class="career-company">${e(row.company || row.outcome)}</p>${row.from ? `<p class="career-from">Previously: ${e(row.from)}</p>` : ''}<button type="button" class="text-link" data-story="${e(row.id)}">Read story <span aria-hidden="true">↗</span></button></article>`).join('') : '<div class="empty-state"><h3>No published stories for this combination yet.</h3><p>Try another background or career path.</p><button type="button" class="text-link" data-reset>Show all stories ↗</button></div>';
     if(window.SSAnimations?.supported)window.SSAnimations.results($('careerGrid'));
     else if(!state.reduced) $('careerGrid').animate?.([{opacity:0.7,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:180,easing:'ease-out'});
-  }
-  function renderReviews() {
-    const reviews = recordsOf('review');
-    $('reviewGrid').innerHTML = reviews.slice(0, state.moreReviews ? reviews.length : 3).map(row => `<article class="review-card">${row.stars ? `<div class="review-stars" aria-label="${row.stars} out of 5 stars">${'★'.repeat(Math.floor(row.stars))}<span aria-hidden="true">${'☆'.repeat(5-Math.floor(row.stars))}</span></div>` : ''}<blockquote class="review-text">“${e(excerpt(row.text))}”</blockquote><div class="review-person"><span class="initial-avatar" aria-hidden="true">${e(initial(row.name))}</span><div><strong>${e(row.name)}</strong><span>${e(catLabel(row.cat))}</span></div></div><div class="review-actions"><span>${e(row.source || 'Learner')} review excerpt</span><button class="text-link" type="button" data-story="${e(row.id)}">Read full review <span aria-hidden="true">↗</span></button></div></article>`).join('');
-    $('reviewMore').hidden = reviews.length <= 3;
-    $('reviewMore').setAttribute('aria-expanded', String(state.moreReviews));
-    $('reviewMore').textContent = state.moreReviews ? 'Show fewer reviews ↑' : `Read ${reviews.length - 3} more learner reviews ↓`;
   }
   function renderMedia() {
     $('videoGrid').innerHTML = recordsOf('video').map(row => `<article class="video-card"><button type="button" class="video-cover" data-video="${e(row.id)}" aria-label="Play ${e(row.name)} video${row.duration ? ', ' + e(row.duration) : ''}">${row.poster ? `<img src="${e(row.poster)}" alt="" width="1280" height="720" loading="lazy">` : ''}<span class="play-disc" aria-hidden="true">▶</span>${row.duration ? `<span class="duration">${e(row.duration)}</span>` : ''}</button><h4>${e(row.headline || row.name)}</h4><p>${e(row.name)}${row.cat !== 'unspecified' ? ' · ' + e(catLabel(row.cat)) : ''}</p><button type="button" class="text-link" data-video="${e(row.id)}">Watch the learner experience <span aria-hidden="true">↗</span></button></article>`).join('');
@@ -65,7 +61,7 @@
         card.querySelector('.hero-story-caption > span').textContent = row.from ? 'FROM ' + row.from.toUpperCase() : row.city ? 'A NEW CHAPTER IN ' + row.city.toUpperCase() : 'A LEARNER JOURNEY';
       }
     });
-    renderLibrary(); renderReviews(); renderMedia(); setupReveals(); diagnostics();
+    renderLibrary(); renderMedia(); setupReveals(); diagnostics();
   }
   function diagnostics(error = '') {
     if (!new URLSearchParams(location.search).has('check')) return;
@@ -132,7 +128,6 @@
   $('backgroundFilter').innerHTML += C.BACKGROUNDS.map(group=>`<option value="${e(group.id)}">${e(group.label)}</option>`).join('') + '<option value="unspecified">Background not specified</option>';
   $('roleFilter').innerHTML += C.ROLE_GROUPS.map(group=>`<option value="${e(group.id)}">${e(group.label)}</option>`).join('');
   ['backgroundFilter','roleFilter'].forEach(id=>$(id).addEventListener('change',renderLibrary));
-  $('reviewMore').addEventListener('click',()=>{state.moreReviews=!state.moreReviews; renderReviews(); window.SSAnimations?.results($('reviewGrid')); if(!state.moreReviews) $('reviewGrid').scrollIntoView({behavior:state.reduced?'auto':'smooth',block:'start'});});
   function menu(open) { $('mobileNav').hidden=!open; $('menuToggle').setAttribute('aria-expanded',String(open)); $('menuToggle').setAttribute('aria-label',open?'Close navigation':'Open navigation'); window.SSAnimations?.menu($('mobileNav'),open); }
   $('menuToggle').addEventListener('click',()=>menu($('mobileNav').hidden));
   $('mobileNav').addEventListener('click',event=>{if(event.target.closest('a'))menu(false);});

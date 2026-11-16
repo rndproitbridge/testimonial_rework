@@ -15,18 +15,9 @@ Open **index.html** in a browser to review the working source page. It works fro
 7. Present written reviews before optional videos and a voice note.
 8. Link to the existing program and enquiry pages.
 
-## Review figures
+## Impact figures
 
-`site-config.js` currently sets `IMPACT.mode: 'sample'`:
-
-- 1,200+ learners trained
-- 300+ learners placed
-- 4 learning tracks
-- 50+ success stories
-
-These figures were selected for design review at the user's request. They are **not verified business results**. The page labels them visibly. The actual published collection currently contains **13 career stories, 7 written reviews and 2 videos**; formats are counted separately and are not a unique-learner total.
-
-Before publication, either set `IMPACT.mode` to `collection` to use calculated collection counts, or supply approved totals, set `approved: true`, add a reporting period, and use `mode: 'verified'`. A production build rejects sample figures or incomplete verified settings. Review HTML includes a noindex tag; a production build removes that tag from the generated output only.
+`site-config.js` now uses `IMPACT.mode: 'collection'`. All illustrative organization totals have been removed. The page calculates actual counts from its published records: currently 13 career stories, 10 named employers, 7 written reviews and 2 videos. These are collection counts, not organization-wide training or placement totals.
 
 ## Canonical source and build
 
@@ -91,3 +82,7 @@ The OS reduced-motion preference stops active Motion animations, release scroll 
 The automated checks cover data parsing, category counts, masking, sample-label rules, offline fallback, filters, dialogs, media creation/cleanup, menu state, review expansion, reduced motion, anchors and packaging. Motion-specific checks verify sequencing, spring configuration, scroll cleanup, reduced-motion interruption, lifecycle cleanup, local font packaging and missing-runtime fallback. See `.preview/validation/report.json` and `.preview/validation/motion-report.json`. The motion tests use a controlled adapter and do not simulate visual browser rendering.
 
 **Validation limitation:** no browser surface was available in this session. Desktop/mobile visual appearance, real media playback, native dialog focus trapping and browser keyboard behavior still need a real-browser review. DOM tests do not establish those properties.
+
+## Direct Google reviews widget
+
+The learner review section embeds the supplied Jotform widget `01a1e4762f2870008f5a33be6c79a571ade7`, targeting PROITBRIDGE Bengaluru (Place ID `ChIJW9EuEGAVrjsR6P0yxKZMMu8`). Sheet review cards are no longer rendered. Jotform controls fetching, caching and refresh timing through its remote embed. The widget currently filters ratings to four stars and above; adjust this in Jotform if desired. The Google listing link is available if the widget fails to load. External widget rendering and synchronization remain unverified in a browser.

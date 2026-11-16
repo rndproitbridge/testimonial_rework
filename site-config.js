@@ -12,7 +12,7 @@ window.SS_CONFIG = {
   },
   IMPACT: {
     mode: 'sample',
-    trained: '1,200+', placed: '300+', tracks: '4', stories: '50+',
+    trained: '1,200', placed: '300', tracks: '4', stories: '5',
     period: '', approved: false
   },
   BACKGROUNDS: [
@@ -22,6 +22,28 @@ window.SS_CONFIG = {
     { id: 'nonit-switch', label: 'Non-IT to IT', aliases: ['nonit-switch','non-it','nonit','non it','non-it → ai','non-it → ai switch','non-it to it','non-it to it switch','non-it professional','domain switch'] },
     { id: 'career-gap', label: 'Career Gap', aliases: ['career gap','career break','career gapper','restart','gap'] }
   ],
+  EMPLOYER_LOGOS: {
+  "Mphasis": {
+    "src": "assets/employers/mphasis.png",
+    "source": "https://www.mphasis.com/content/dam/mphasis-com/global/logo/mphasis-logo.png"
+  },
+  "Amvion Labs": {
+    "src": "assets/employers/amvion-labs.svg",
+    "source": "https://www.amvionlabs.com/asserts-1/images/logo.svg"
+  },
+  "Cognizant": {
+    "src": "assets/employers/cognizant.svg",
+    "source": "https://cognizant.scene7.com/is/content/cognizant/COG-Logo-2022-1?fmt=png-alpha"
+  },
+  "Celestial Systems": {
+    "src": "assets/employers/celestial-systems.png",
+    "source": "https://celestialsys.com/wp-content/uploads/2024/06/master-logo-X400-300x58.png"
+  },
+  "Rohnium India": {
+    "src": "assets/employers/rohnium-india.png",
+    "source": "https://static.tildacdn.net/tild3165-3263-4638-b034-363432643931/noroot.png"
+  }
+},
   ROLE_GROUPS: [
     { id: 'data-science', label: 'Data Science', description: 'Data Scientist and related roles', keywords: 'data scien' },
     { id: 'ai', label: 'AI & Machine Learning', description: 'AI engineering, consulting and applied AI roles', keywords: '\\bai\\b|agentic|machine learning|\\bml\\b|\\bnlp\\b' },

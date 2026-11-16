@@ -76,3 +76,9 @@ Before a public release, replace the illustrative organization totals with appro
 ## Larger typography and Full HD layout
 
 The content container now grows to 1600 px at 1920 px viewport width, leaving 160 px margins. The desktop hero uses viewport-aware minimum height, larger portraits and a heading up to 96 px. Main supporting copy is 18–20 px. Tablet layouts adapt at 1100 and 900 px; phone layouts at 700 and 380 px. Small-screen body copy remains 16–18 px. No fixed page height or global zoom is used. Actual multi-device visual QA remains outstanding because browser access is unavailable.
+
+## Employer logo strip
+Five company-sourced logos replace the text strip: Mphasis, Amvion Labs, Cognizant, Celestial Systems and Rohnium India. Source URLs are in assets/employers/SOURCES.json. Equal duplicate tracks scroll continuously left to right. Hover and keyboard focus stop playback. The hovered logo enlarges gently by 10%; there is no pause button. System reduced motion displays a static, horizontally accessible collection. Other employers remain in learner records; unconfirmed logo identities are not guessed.
+
+## Content cleanup
+Removed illustrative organization totals, decorative text labels, repeated slogans and redundant supporting copy. Impact mode is now collection, calculated from the published learner records. Actual stories, quotes, role/background filters, learning steps, support information and CTAs remain. This supersedes the earlier sample-figure review notes.

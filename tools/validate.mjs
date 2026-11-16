@@ -35,10 +35,12 @@ export async function validate() {
   check('Unpublished records are excluded',core.normalize('Publish,Type,Name\nNo,Offer,Hidden',config).length===0);
   check('Legacy Quote records remain readable without invented stars',core.normalize('Publish,Type,Name,Text\nYes,Quote,Learner,Useful lessons',config)[0].type==='review'&&core.normalize('Publish,Type,Name,Text\nYes,Quote,Learner,Useful lessons',config)[0].stars===0);
   check('Duplicate record IDs cannot inflate counts',core.normalize('Publish,Type,Name\nYes,Offer,Repeat\nYes,Offer,Repeat',config).length===1);
-  check('Sample impact is explicitly labelled',core.impact(records,config).context.includes('illustrative'));
-  check('Unapproved verified totals fall back to actual collection counts',core.impact(records,{...config,IMPACT:{...config.IMPACT,mode:'verified',approved:false}}).mode==='collection');
-  check('Approved verified totals require a period',core.impact(records,{...config,IMPACT:{...config.IMPACT,mode:'verified',approved:true,period:''}}).mode==='collection');
-  check('Approved totals with a period are supported',core.impact(records,{...config,IMPACT:{...config.IMPACT,mode:'verified',approved:true,period:'As of 16 November 2026'}}).mode==='verified');
+  const sampleImpact={mode:'sample',trained:'100',placed:'20',tracks:'3',stories:'10',approved:false,period:''};
+  check('Optional sample mode remains explicitly labelled',core.impact(records,{...config,IMPACT:sampleImpact}).context.includes('illustrative'));
+  check('Requested illustrative figures are restored',config.IMPACT.mode==='sample'&&[config.IMPACT.trained,config.IMPACT.placed,config.IMPACT.tracks,config.IMPACT.stories].join(',')==='1,200,300,4,5');
+  check('Unapproved verified totals fall back to actual collection counts',core.impact(records,{...config,IMPACT:{...sampleImpact,mode:'verified',approved:false}}).mode==='collection');
+  check('Approved verified totals require a period',core.impact(records,{...config,IMPACT:{...sampleImpact,mode:'verified',approved:true,period:''}}).mode==='collection');
+  check('Approved totals with a period are supported',core.impact(records,{...config,IMPACT:{...sampleImpact,mode:'verified',approved:true,period:'As of 16 November 2026'}}).mode==='verified');
   const {window,document}=parseHTML(html);
   // Isolate this fallback test from motion adapters run in the same Node session.
   window.SSAnimations=undefined;window.Motion=undefined;
@@ -64,7 +66,7 @@ export async function validate() {
   check('Offline fallback retains all stories',$('careerGrid').children.length===13&&$('dataCheck').textContent.includes('live refresh unavailable'));
   check('Three featured journeys render',$('featuredStories').children.length===3);
   check('Real background counts are visible',$('backgroundCounts').textContent.includes('IT Professional')&&$('backgroundCounts').querySelectorAll('button').length===4);
-  check('Sample label is visible and totals rendered',!$('sampleNotice').hidden&&$('metricGrid').textContent.includes('1,200+'));
+  check('Requested totals retain an illustrative label',!$('sampleNotice').hidden&&$('metricGrid').textContent.includes('1,200')&&$('metricGrid').textContent.includes('300'));
   check('Videos do not create players until requested',document.querySelectorAll('video,iframe').length===0);
   check('Audio does not preload or autoplay',document.querySelector('audio').getAttribute('preload')==='none'&&!document.querySelector('audio').hasAttribute('autoplay'));
   click(document.querySelector('[data-role="ai"]'));
@@ -86,8 +88,9 @@ export async function validate() {
   check('Video opens only on interaction',dialog.open&&$('dialogContent').querySelectorAll('video').length===1&&!$('dialogContent').querySelector('video').hasAttribute('autoplay'));
   const player=$('dialogContent').querySelector('video');click($('dialogClose'));
   check('Closing video pauses playback and removes player',player._paused&&document.querySelectorAll('video').length===0);
-  click($('reviewMore'));check('Read more reveals all seven reviews',$('reviewGrid').children.length===7);
-  click($('reviewMore'));check('Review list can collapse',$('reviewGrid').children.length===3);
+  check('Supplied Google review widget is mounted',Boolean($('JFWebsiteWidget-01a1e4762f2870008f5a33be6c79a571ade7')));
+  check('Sheet review controls are removed',!$('reviewMore')&&document.querySelectorAll('.review-card').length===0);
+  check('Widget embed is included exactly once',document.querySelectorAll('script[src="https://www.jotform.com/website-widgets/embed/01a1e4762f2870008f5a33be6c79a571ade7"]').length===1);
   click($('menuToggle'));check('Mobile menu exposes expanded state',!$('mobileNav').hidden&&$('menuToggle').getAttribute('aria-expanded')==='true');
   click($('mobileNav').querySelector('a'));check('Mobile menu closes after selection',$('mobileNav').hidden);
   check('Footer motion control is removed',!$('motionToggle')); mediaQuery.matches=true;motionChange();check('System reduced motion is respected',document.documentElement.classList.contains('reduced-motion'));

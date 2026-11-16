@@ -33,6 +33,8 @@ export async function build({production=false}={}) {
   if(production)html=html.replace(/\s*<meta name="robots"[^>]*data-review-only>/,'');
   const media=new Set([...html.matchAll(/(?:src|href)="(assets\/[^"?#]+)"/g)].map(match=>match[1]));
   ['assets/fonts/OFL.txt','assets/vendor/MOTION-LICENSE.txt','assets/vendor/SOURCES.txt'].forEach(path=>media.add(path));
+  for(const logo of Object.values(config.EMPLOYER_LOGOS||{}))media.add(logo.src);
+  media.add('assets/employers/SOURCES.json');
   for(const group of Object.values(config.LOCAL_ASSETS)) for(const path of Object.values(group))if(path.startsWith('assets/'))media.add(path);
   for(const group of Object.values(config.MEDIA_FILES)) for(const path of Object.values(group))if(path.startsWith('assets/'))media.add(path);
   for(const path of media) {if(path.includes('..'))throw new Error('Invalid media path'); await readFile(resolve(root,path));}
