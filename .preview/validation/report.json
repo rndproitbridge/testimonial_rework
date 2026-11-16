@@ -1,5 +1,5 @@
 {
-  "passed": 60,
+  "passed": 61,
   "checks": [
     "Current feed has 13 career stories, 7 reviews and 2 videos",
     "Role categories partition all career stories",
@@ -36,7 +36,8 @@
     "Review list can collapse",
     "Mobile menu exposes expanded state",
     "Mobile menu closes after selection",
-    "Reduced motion is applied and remembered",
+    "Footer motion control is removed",
+    "System reduced motion is respected",
     "No duplicate document IDs",
     "Anchor target exists: #main",
     "Anchor target exists: #impact",

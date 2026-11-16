@@ -1,0 +1,33 @@
+{
+  "passed": 25,
+  "checks": [
+    "Pinned Motion runtime exposes all required functions",
+    "All headings and body copy use Sora",
+    "Brand font is local and preloaded",
+    "Font is a valid WOFF2 container",
+    "Built CSS resolves the local font path",
+    "Motion enhancement activates only with supported APIs",
+    "Three headline lines enter in sequence",
+    "Photo entrances use spring transitions",
+    "The decorative path is drawn once",
+    "Reading sections and journey steps register viewport reveals",
+    "Journey line follows scroll progress",
+    "Desktop parallax affects decorative layers only",
+    "Button hover uses a spring",
+    "Collapsed story library does not waste animation work",
+    "Filter results animate with a stagger",
+    "Reduced motion stops every scroll binding",
+    "Reduced motion restores readable headline styles",
+    "Reduced motion stops running result animations",
+    "No decorative animations start while reduced motion is on",
+    "Reduced-motion dialog closes immediately",
+    "Data refresh does not replay the hero",
+    "Animated close completes its functional callback",
+    "Live refresh releases removed-card observers and gestures",
+    "Page lifecycle cleanup releases scroll effects",
+    "Missing runtime keeps the page functional without enhancements"
+  ],
+  "limitations": [
+    "Motion control flow checked using a controlled DOM adapter. Real-browser rendering, spring appearance, scroll smoothness and pointer behavior require visual review."
+  ]
+}

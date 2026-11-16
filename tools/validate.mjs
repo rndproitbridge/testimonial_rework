@@ -40,6 +40,10 @@ export async function validate() {
   check('Approved verified totals require a period',core.impact(records,{...config,IMPACT:{...config.IMPACT,mode:'verified',approved:true,period:''}}).mode==='collection');
   check('Approved totals with a period are supported',core.impact(records,{...config,IMPACT:{...config.IMPACT,mode:'verified',approved:true,period:'As of 16 November 2026'}}).mode==='verified');
   const {window,document}=parseHTML(html);
+  // Isolate this fallback test from motion adapters run in the same Node session.
+  window.SSAnimations=undefined;window.Motion=undefined;
+  const Observer=class{observe(){}unobserve(){}disconnect(){}};
+  window.IntersectionObserver=Observer;
   // linkedom supplies DOM, but not browser-only selection, media or dialog behavior.
   Object.defineProperty(window.HTMLSelectElement.prototype,'value',{configurable:true,get(){return this.querySelector('option[selected]')?.getAttribute('value')||this.querySelector('option')?.getAttribute('value')||'';},set(value){for(const option of this.querySelectorAll('option')){if(option.getAttribute('value')===String(value))option.setAttribute('selected','');else option.removeAttribute('selected');}}});
   let focused=null;Object.defineProperty(document,'activeElement',{configurable:true,get:()=>focused});
@@ -48,11 +52,11 @@ export async function validate() {
   window.HTMLElement.prototype.pause=function(){this._paused=true;};
   const dialog=document.getElementById('storyDialog');
   dialog.showModal=function(){this.open=true;};dialog.close=function(){this.open=false;this.dispatchEvent(new window.Event('close'));};
-  const mediaQuery={matches:false,addEventListener(){}};
+  let motionChange; const mediaQuery={matches:false,addEventListener(event,callback){motionChange=callback;}};
   window.matchMedia=()=>mediaQuery;
   window.innerWidth=1280;window.innerHeight=800;window.scrollY=0;
   const storage=new Map();
-  const context={window,document,URL,URLSearchParams,location:{protocol:'https:',search:'?check'},localStorage:{getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value)},requestAnimationFrame:fn=>fn(),setTimeout,clearTimeout,setInterval:()=>0,AbortController,fetch:async()=>{throw new Error('Offline test');}};
+  const context={window,document,IntersectionObserver:Observer,URL,URLSearchParams,location:{protocol:'https:',search:'?check'},localStorage:{getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value)},requestAnimationFrame:fn=>fn(),setTimeout,clearTimeout,setInterval:()=>0,AbortController,fetch:async()=>{throw new Error('Offline test');}};
   const sandbox=vm.createContext(context);
   sources.forEach((source,index)=>new vm.Script(source,{filename:sourceFiles[index]}).runInContext(sandbox));
   await new Promise(resolve=>setTimeout(resolve,0));
@@ -86,7 +90,7 @@ export async function validate() {
   click($('reviewMore'));check('Review list can collapse',$('reviewGrid').children.length===3);
   click($('menuToggle'));check('Mobile menu exposes expanded state',!$('mobileNav').hidden&&$('menuToggle').getAttribute('aria-expanded')==='true');
   click($('mobileNav').querySelector('a'));check('Mobile menu closes after selection',$('mobileNav').hidden);
-  click($('motionToggle'));check('Reduced motion is applied and remembered',document.documentElement.classList.contains('reduced-motion')&&storage.get('ss-reduce-motion')==='true');
+  check('Footer motion control is removed',!$('motionToggle')); mediaQuery.matches=true;motionChange();check('System reduced motion is respected',document.documentElement.classList.contains('reduced-motion'));
   const allIDs=[...document.querySelectorAll('[id]')].map(node=>node.id);check('No duplicate document IDs',new Set(allIDs).size===allIDs.length);
   for(const link of document.querySelectorAll('a[href^="#"]'))check('Anchor target exists: '+link.getAttribute('href'),Boolean($(link.getAttribute('href').slice(1))));
   const css=await read('assets/success-stories.css');

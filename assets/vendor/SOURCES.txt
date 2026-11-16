@@ -1,0 +1,5 @@
+Motion 14.14.0 (MIT): https://cdn.jsdelivr.net/npm/motion@14.14.0/dist/motion.js
+DM Sans variable normal (OFL-1.1), exact main PROITBRIDGE asset: https://www.proitbridge.com/wp-content/uploads/elementor/google-fonts/fonts/dmsans-rp2yp2ywxg089urii5-g4vlh9vod8cmcqbu0-k4.woff2
+
+Sora variable Latin (OFL-1.1): https://unpkg.com/@fontsource-variable/sora@5.3.0/files/sora-latin-wght-normal.woff2
+Brand reference: https://www.proitbridge.com/pricing/ uses Sora as its display family.

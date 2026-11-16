@@ -9,7 +9,7 @@ const root = fileURLToPath(new URL('../',import.meta.url));
 const read = path => readFile(resolve(root,path),'utf8');
 const safeScript = text => text.replace(/<\/script/gi,'<\\/script').replace(/<!--/g,'<\\!--');
 export async function build({production=false}={}) {
-  const scripts=['site-config.js','data/snapshot.js','assets/story-data.js','assets/success-stories.js'];
+  const scripts=['site-config.js','data/snapshot.js','assets/story-data.js','assets/vendor/motion-14.14.0.js','assets/page-motion.js','assets/success-stories.js'];
   const sources=await Promise.all(scripts.map(read));
   const context={window:{},URL};
   vm.runInNewContext(sources.slice(0,3).join('\n'),context);
@@ -20,7 +20,7 @@ export async function build({production=false}={}) {
     throw new Error('Review figures are enabled. Use approved verified impact totals with a reporting period, or set IMPACT.mode to collection before a production build.');
   }
   let html=await read('index.html');
-  const css=await read('assets/success-stories.css');
+  const css=(await read('assets/success-stories.css')).replace(/url\(['"]?fonts\//g,'url("assets/fonts/');
   if(!html.includes('<link rel="stylesheet" href="assets/success-stories.css">'))throw new Error('Missing stylesheet marker');
   html=html.replace('<link rel="stylesheet" href="assets/success-stories.css">',()=>'<style>\n'+css+'\n</style>');
   for(const script of scripts) {
@@ -32,6 +32,7 @@ export async function build({production=false}={}) {
   html=html.replace('</body>',()=>scripts.map((script,index)=>`<script>\n/* ${script} */\n${safeScript(sources[index])}\n</script>`).join('\n')+'\n</body>');
   if(production)html=html.replace(/\s*<meta name="robots"[^>]*data-review-only>/,'');
   const media=new Set([...html.matchAll(/(?:src|href)="(assets\/[^"?#]+)"/g)].map(match=>match[1]));
+  ['assets/fonts/OFL.txt','assets/vendor/MOTION-LICENSE.txt','assets/vendor/SOURCES.txt'].forEach(path=>media.add(path));
   for(const group of Object.values(config.LOCAL_ASSETS)) for(const path of Object.values(group))if(path.startsWith('assets/'))media.add(path);
   for(const group of Object.values(config.MEDIA_FILES)) for(const path of Object.values(group))if(path.startsWith('assets/'))media.add(path);
   for(const path of media) {if(path.includes('..'))throw new Error('Invalid media path'); await readFile(resolve(root,path));}

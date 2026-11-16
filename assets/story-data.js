@@ -2,7 +2,7 @@
 (function (root) {
   'use strict';
   const norm = value => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-  const clean = value => String(value || '').trim().replace(/\*\*/g, '');
+  const clean = value => String(value || '').trim().replace(/\*\*/g, '').replace(/\s*[\u2013\u2014]\s*/g, ', ');
   const escape = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function safeURL(value) {
     const text = String(value || '').trim();

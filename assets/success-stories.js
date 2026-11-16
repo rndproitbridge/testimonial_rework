@@ -34,7 +34,8 @@
     $('librarySummary').textContent = `Explore all ${offers.length} career stories`;
     $('filterStatus').textContent = `${selected.length} of ${offers.length} career stories${background !== 'all' ? ' · ' + catLabel(background) : ''}${role !== 'all' ? ' · ' + C.ROLE_GROUPS.find(group => group.id === role)?.label : ''}`;
     $('careerGrid').innerHTML = selected.length ? selected.map(row => `<article class="career-card"><span class="career-background">${e(catLabel(row.cat))}</span><h3>${e(row.name)}</h3><p class="career-role">${e(row.role)}</p><p class="career-company">${e(row.company || row.outcome)}</p>${row.from ? `<p class="career-from">Previously: ${e(row.from)}</p>` : ''}<button type="button" class="text-link" data-story="${e(row.id)}">Read story <span aria-hidden="true">↗</span></button></article>`).join('') : '<div class="empty-state"><h3>No published stories for this combination yet.</h3><p>Try another background or career path.</p><button type="button" class="text-link" data-reset>Show all stories ↗</button></div>';
-    if(!state.reduced) $('careerGrid').animate?.([{opacity:0.7,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:180,easing:'ease-out'});
+    if(window.SSAnimations?.supported)window.SSAnimations.results($('careerGrid'));
+    else if(!state.reduced) $('careerGrid').animate?.([{opacity:0.7,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:180,easing:'ease-out'});
   }
   function renderReviews() {
     const reviews = recordsOf('review');
@@ -104,13 +105,16 @@
     document.body.classList.add('dialog-open');
     $('storyDialog').scrollTop = 0;
     $('dialogClose').focus();
+    window.SSAnimations?.dialog($('storyDialog'));
     $('dialogContent').querySelectorAll('img,video').forEach(media => media.addEventListener('error', () => {
       if (media.nextElementSibling?.classList.contains('dialog-error')) return;
       const notice = document.createElement('p'); notice.className='dialog-error'; notice.textContent='This media could not be loaded. Please use the original source link below.'; media.after(notice);
     }, {once:true}));
   }
-  $('dialogClose').addEventListener('click', () => $('storyDialog').close());
-  $('storyDialog').addEventListener('click', event => { if (event.target === $('storyDialog')) { const box=event.target.getBoundingClientRect(); if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) event.target.close(); } });
+  function requestDialogClose() { if(window.SSAnimations?.supported)window.SSAnimations.closeDialog($('storyDialog'),()=>$('storyDialog').close());else $('storyDialog').close(); }
+  $('dialogClose').addEventListener('click', requestDialogClose);
+  $('storyDialog').addEventListener('cancel',event=>{event.preventDefault();requestDialogClose();});
+  $('storyDialog').addEventListener('click', event => { if (event.target === $('storyDialog')) { const box=event.target.getBoundingClientRect(); if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) requestDialogClose(); } });
   $('storyDialog').addEventListener('close', () => { stopMedia(); document.body.classList.remove('dialog-open'); $('dialogContent').innerHTML=''; state.opener?.focus(); if (state.pending) { state.records=state.pending; state.pending=null; render(); } });
   document.addEventListener('play', event => { document.querySelectorAll('video,audio').forEach(media => { if(media !== event.target) media.pause(); }); }, true);
   function applyPending() { if(state.pending&&!$('storyDialog').open&&Array.from(document.querySelectorAll('audio,video')).every(media=>media.paused)){state.records=state.pending;state.pending=null;render();} }
@@ -128,19 +132,18 @@
   $('backgroundFilter').innerHTML += C.BACKGROUNDS.map(group=>`<option value="${e(group.id)}">${e(group.label)}</option>`).join('') + '<option value="unspecified">Background not specified</option>';
   $('roleFilter').innerHTML += C.ROLE_GROUPS.map(group=>`<option value="${e(group.id)}">${e(group.label)}</option>`).join('');
   ['backgroundFilter','roleFilter'].forEach(id=>$(id).addEventListener('change',renderLibrary));
-  $('reviewMore').addEventListener('click',()=>{state.moreReviews=!state.moreReviews; renderReviews(); if(!state.moreReviews) $('reviewGrid').scrollIntoView({behavior:state.reduced?'auto':'smooth',block:'start'});});
-  function menu(open) { $('mobileNav').hidden=!open; $('menuToggle').setAttribute('aria-expanded',String(open)); $('menuToggle').setAttribute('aria-label',open?'Close navigation':'Open navigation'); }
+  $('reviewMore').addEventListener('click',()=>{state.moreReviews=!state.moreReviews; renderReviews(); window.SSAnimations?.results($('reviewGrid')); if(!state.moreReviews) $('reviewGrid').scrollIntoView({behavior:state.reduced?'auto':'smooth',block:'start'});});
+  function menu(open) { $('mobileNav').hidden=!open; $('menuToggle').setAttribute('aria-expanded',String(open)); $('menuToggle').setAttribute('aria-label',open?'Close navigation':'Open navigation'); window.SSAnimations?.menu($('mobileNav'),open); }
   $('menuToggle').addEventListener('click',()=>menu($('mobileNav').hidden));
   $('mobileNav').addEventListener('click',event=>{if(event.target.closest('a'))menu(false);});
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('mobileNav').hidden){menu(false);$('menuToggle').focus();}});
   window.addEventListener('resize',()=>{if(window.innerWidth>980)menu(false);});
   const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
-  let preferred=false; try {preferred=localStorage.getItem('ss-reduce-motion')==='true';} catch (_) {}
-  function applyMotion() { state.reduced=preferred||motionQuery.matches; document.documentElement.classList.toggle('reduced-motion',state.reduced); $('motionToggle').setAttribute('aria-pressed',String(state.reduced)); $('motionToggle').textContent=state.reduced?'Reduced motion on ◐':'Reduce motion ◐'; }
-  $('motionToggle').addEventListener('click',()=>{preferred=!preferred;try{localStorage.setItem('ss-reduce-motion',String(preferred));}catch(_){} applyMotion(); if(motionQuery.matches)$('motionToggle').textContent='Reduced motion · system setting';});
+  function applyMotion() { state.reduced=motionQuery.matches; document.documentElement.classList.toggle('reduced-motion',state.reduced); window.SSAnimations?.setReduced(state.reduced); }
   motionQuery.addEventListener?.('change',applyMotion); applyMotion();
   let revealObserver;
   function setupReveals() {
+    if(window.SSAnimations?.supported){window.SSAnimations.refresh();return;}
     if (!('IntersectionObserver' in window)) return;
     if (!revealObserver) revealObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-in');revealObserver.unobserve(entry.target);}});},{threshold:0.1});
     document.querySelectorAll('.section-heading,.feature-story,.support-items article,.journey-steps').forEach(el=>{if(!el.classList.contains('reveal-ready')){el.classList.add('reveal-ready');revealObserver.observe(el);}});

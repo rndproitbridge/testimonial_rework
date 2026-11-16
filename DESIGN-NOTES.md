@@ -29,7 +29,7 @@ Reviewed on 16 November 2026:
 - [Agentic AI induction website](https://agenticaiinduction.proitbridge.com/): Plus Jakarta Sans and the blue/cyan/navy family used to inform this page's visual direction.
 - [Official enquiry page](https://www.proitbridge.com/contact-us-2/): the destination for enquiry CTAs.
 
-The resulting palette uses deep navy `#071f44`, blue `#007dbb`, cyan `#00a9df`, pale sky backgrounds and warm white. Plus Jakarta Sans headings pair with DM Sans body text. Actual portraits and original learner records carry the human detail. Employer names are text references to learner outcomes, not partner logos or endorsements.
+The resulting palette uses deep navy `#071f44`, blue `#007dbb`, cyan `#00a9df`, pale sky backgrounds and warm white. Following the user's brand-consistency refinement, **Sora is used for both headings and body text**. The [PROITBRIDGE pricing page](https://www.proitbridge.com/pricing/) explicitly loads Sora and uses it as its display family. The homepage still uses DM Sans, so the public sites are not uniform. This page follows the requested Sora direction and bundles the open-source variable font locally. Actual portraits and original learner records carry the human detail. Employer names are text references to learner outcomes, not partner logos or endorsements.
 
 The induction sites offer different sessions and prices. The success-stories page therefore uses general program and enquiry links rather than borrowing a session price or promotion. Public founder experience figures were not repurposed as organization-wide learner totals.
 
@@ -51,18 +51,28 @@ Review figures requested by the user: 1,200+ trained; 300+ placed; 4 learning tr
 
 | Element | Behavior |
 |---|---|
-| Hero photos | Brief 700 ms entrance with a small stagger |
-| Section headings and story cards | One-time 22 px movement over 650 ms; text remains readable |
-| Journey | An 800 ms connecting-line entrance |
-| Filter results | A 180 ms transition after a selection |
-| Dialog | A short 180 ms entrance; native close/Escape behavior and media cleanup |
+| Hero headline | Three masked lines enter in sequence over about one second |
+| Hero photos | Spring entrances, offset in time, settling into the editorial photo composition |
+| Hero path | A 1.7 second SVG line draw connecting the visual composition |
+| Impact figures and outcomes | Staggered reveals; figures themselves do not count up |
+| Section headings and story cards | One-time viewport entrances, with shorter movement on mobile |
+| Journey | Scroll-linked progress line and highlighted step markers |
+| Decorative backgrounds | Limited desktop parallax; body text stays fixed within the layout |
+| Filter results | Short staggered entrances; collapsed content is not animated |
+| Dialog | A spring entrance and 160 ms exit, preserving native focus behavior and media cleanup |
 | Reading progress | Tracks ordinary scrolling without altering scroll behavior |
-| Hover controls | Small directional feedback, no continuous animation |
+| Hover / press controls | Spring button feedback, gently lifted cards and video play-button response |
 
-No looping decorative animation, forced splash screen, autoplay audio/video or count-up statistics. Reduced motion is supported through both the system preference and a persistent footer control. Layouts include desktop, tablet and mobile rules; actual browser visual QA remains outstanding because browser access was unavailable.
+The implementation uses the pinned, locally bundled **Motion 14.14.0** library. The requested [React animation guide](https://motion.dev/docs/react-animation) informed the use of coordinated transitions, springs and independent transforms. The existing static site uses Motion's documented [JavaScript API](https://motion.dev/docs/quick-start), [viewport triggers](https://motion.dev/docs/inview), and [scroll linking](https://motion.dev/docs/scroll).
+
+No looping decorative animation, forced splash screen, autoplay audio/video or count-up statistics. Reduced motion is supported through the system preference , including stopping active JavaScript effects and restoring resting styles. Layouts include desktop, tablet and mobile rules. Touch layouts do not run desktop parallax. Actual browser visual QA remains outstanding because browser access was unavailable.
 
 ## Review and publication
 
 The previous files are archived in `backup/before-manager-redesign-20261116/`. The new source and generated entry points share one implementation. A clean review ZIP contains only required site assets. No remote deployment was performed.
 
 Before a public release, replace the illustrative organization totals with approved figures and a reporting period, or use the calculated collection mode. A production build checks that setting. The existing student records should receive the normal content-owner review, particularly dates, packages and any featured-story editorial changes.
+
+## Larger typography and Full HD layout
+
+The content container now grows to 1600 px at 1920 px viewport width, leaving 160 px margins. The desktop hero uses viewport-aware minimum height, larger portraits and a heading up to 96 px. Main supporting copy is 18–20 px. Tablet layouts adapt at 1100 and 900 px; phone layouts at 700 and 380 px. Small-screen body copy remains 16–18 px. No fixed page height or global zoom is used. Actual multi-device visual QA remains outstanding because browser access is unavailable.

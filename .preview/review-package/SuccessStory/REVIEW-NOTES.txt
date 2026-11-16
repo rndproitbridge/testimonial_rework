@@ -1,9 +1,2 @@
-PROITBRIDGE Success Stories — design review
-
-Open index.html in a browser. Keep the assets folder beside it.
-
-The 1,200+ trained, 300+ placed, 4 learning tracks and 50+ stories are visibly labelled illustrative review figures, not verified business results.
-
-All individual learner stories come from the existing published collection.
-
-No public deployment was performed. Browser visual and real-media QA remain to be done; 60 non-browser checks passed.
+PROITBRIDGE Success Stories review
+Uses Sora, matching the official pricing page. Footer motion button removed. System reduced-motion preference remains supported. Organization totals remain illustrative. Browser visual review outstanding.

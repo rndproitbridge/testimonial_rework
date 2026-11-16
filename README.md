@@ -36,6 +36,9 @@ Before publication, either set `IMPACT.mode` to `collection` to use calculated c
 | `assets/success-stories.css` | Responsive layout, typography, component styles and motion |
 | `assets/story-data.js` | CSV parsing, masking, categorization and counts |
 | `assets/success-stories.js` | Rendering, filters, dialogs, media and live refresh |
+| `assets/page-motion.js` | Motion entrance, scroll, spring, gesture and reduced-motion orchestration |
+| `assets/vendor/motion-14.14.0.js` | Pinned, self-hosted Motion runtime (MIT) |
+| `assets/fonts/sora-brand.woff2` | Locally bundled Sora variable font, matching the pricing page (OFL) |
 | `site-config.js` | Impact settings, editorial selections, asset mappings and real CTA URLs |
 | `data/snapshot.js` | Saved published data for first render and offline use |
 | `tools/build-single.mjs` | Generates consistent HTML and copies its required media |
@@ -48,9 +51,10 @@ With Node.js installed:
 node tools/update-snapshot.mjs
 node tools/build-single.mjs
 node tools/validate.mjs
+node tools/validate-motion.mjs
 ```
 
-The build uses the saved snapshot. Refresh it first when you want a new offline data copy. It writes identical HTML to `dist/index.html`, `dist/success-stories.html` and `godaddy-upload/SuccessStory/index.html`, and copies the required images/audio/video beside it. **Upload the HTML with its assets folder**, not the HTML alone. CSS, settings, data and application scripts are embedded in generated HTML; fonts may still load from Google Fonts, with system fallbacks.
+The build uses the saved snapshot. Refresh it first when you want a new offline data copy. It writes identical HTML to `dist/index.html`, `dist/success-stories.html` and `godaddy-upload/SuccessStory/index.html`, and copies the required images/audio/video beside it. **Upload the HTML with its assets folder**, not the HTML alone. CSS, settings, data, the Motion runtime and application scripts are embedded in generated HTML. Sora is bundled locally and preloaded; the design does not require a font or animation CDN at runtime. Font and library licences are included.
 
 After approved impact settings are in place:
 
@@ -78,8 +82,12 @@ The app refreshes about every five minutes while the page is visible. Updates wa
 
 ## Interaction and validation
 
-Motion consists of a brief photo entrance, gentle one-time section movement, a connecting journey line, hover feedback, filter transitions and a reading-progress indicator. There is no autoplay video or animated number counting. The OS reduced-motion preference and the footer's Reduce motion control disable decorative motion. All videos require a user action; audio uses `preload="none"`.
+The page uses Motion 14.14.0's JavaScript API, following the animation principles in the requested React documentation without converting the existing site to React. The enhancement includes masked headline entrances, spring-driven photo entrances, an SVG path draw, staggered impact figures and outcomes, a scroll-linked journey, one-time section reveals, desktop decorative parallax, spring hover/press feedback, filter transitions, and dialog entrance/exit. Videos remain user initiated and numeric totals are never counted up from zero.
 
-The current automated checks cover data parsing, category counts, masking, sample-label rules, offline fallback, filters, dialogs, media creation/cleanup, menu state, review expansion, reduced motion, anchors and packaging. See `.preview/validation/report.json`.
+Both headings and body copy use Sora. The bundled variable WOFF2 uses Sora, verified on PROITBRIDGE’s pricing page, with its OFL licence. This replaces the previous Plus Jakarta Sans heading choice.
+
+The OS reduced-motion preference stops active Motion animations, release scroll listeners and restore readable resting styles. Touch layouts omit desktop parallax/hover effects. CSS fallback states keep content readable when Motion or browser animation APIs are unavailable. All videos require a user action; audio uses `preload="none"`.
+
+The automated checks cover data parsing, category counts, masking, sample-label rules, offline fallback, filters, dialogs, media creation/cleanup, menu state, review expansion, reduced motion, anchors and packaging. Motion-specific checks verify sequencing, spring configuration, scroll cleanup, reduced-motion interruption, lifecycle cleanup, local font packaging and missing-runtime fallback. See `.preview/validation/report.json` and `.preview/validation/motion-report.json`. The motion tests use a controlled adapter and do not simulate visual browser rendering.
 
 **Validation limitation:** no browser surface was available in this session. Desktop/mobile visual appearance, real media playback, native dialog focus trapping and browser keyboard behavior still need a real-browser review. DOM tests do not establish those properties.
