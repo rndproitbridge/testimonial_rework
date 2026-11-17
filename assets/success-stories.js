@@ -14,7 +14,7 @@
   function feature(row, index) {
     const copy = C.STORY_COPY[row.key] || {headline:row.headline || row.role, intro:row.company ? `${row.name} shares a career step at ${row.company}.` : row.note};
     const lead = index === 0 && row.photo;
-    return `<article class="feature-story${lead ? ' is-lead' : ''}">${lead ? `<div class="feature-portrait"><img src="${e(row.photo)}" width="640" height="640" alt="${e(row.name)}" loading="lazy"><div class="portrait-name"><strong>${e(row.name)}</strong><span>${e(row.role)}${row.company ? ' · ' + e(row.company) : ''}</span></div></div>` : ''}<div class="feature-content"><div class="feature-meta"><span class="outcome-type">${e(row.outcome)}</span></div><h3>${e(copy.headline)}</h3><p class="feature-description">${e(copy.intro)}</p><div class="feature-facts">${fact(row.from ? 'Starting point' : 'Learning track', row.from || row.program)}${fact('Next chapter', row.role + (row.company ? ' · ' + row.company : ''))}${fact(row.from ? 'Learning focus' : 'Skills studied', row.modules || (row.key === 'santosh' ? 'RAG, Word2Vec and related concepts, mentioned in his feedback.' : row.program), true)}</div>${row.text ? `<blockquote class="feature-quote">“${e(row.text)}”</blockquote>` : ''}${!lead ? person(row) : ''}<div class="feature-actions"><button class="text-link" type="button" data-story="${e(row.id)}">Read the shared story <span aria-hidden="true">↗</span></button></div></div></article>`;
+    return `<article class="feature-story${lead ? ' is-lead' : ''}">${lead ? `<div class="feature-portrait"><img src="${e(row.photo)}" width="640" height="640" alt="${e(row.name)}" loading="lazy"><div class="portrait-name"><strong>${e(row.name)}</strong><span>${e(row.role)}${row.company ? ' · ' + e(row.company) : ''}</span></div></div>` : ''}<div class="feature-content"><div class="feature-meta"><span class="outcome-type">${e(row.outcome)}</span></div><h3>${e(copy.headline)}</h3><p class="feature-description">${e(copy.intro)}</p><div class="feature-facts">${fact(row.from ? 'Starting point' : 'Learning track', row.from || row.program)}${fact('Current role', row.role + (row.company ? ' · ' + row.company : ''))}${fact(row.from ? 'Learning focus' : 'Skills studied', row.modules || (row.key === 'santosh' ? 'RAG, Word2Vec and related concepts, mentioned in his feedback.' : row.program), true)}</div>${row.text ? `<blockquote class="feature-quote">“${e(row.text)}”</blockquote>` : ''}${!lead ? person(row) : ''}<div class="feature-actions"><button class="text-link" type="button" data-story="${e(row.id)}">Read the full story <span aria-hidden="true">↗</span></button></div></div></article>`;
   }
   function renderImpact() {
     const counts = D.metrics(state.records,C), impact = D.impact(state.records,C);
@@ -41,14 +41,14 @@
     else if(!state.reduced) $('careerGrid').animate?.([{opacity:0.7,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:180,easing:'ease-out'});
   }
   function renderMedia() {
-    $('videoGrid').innerHTML = recordsOf('video').map(row => `<article class="video-card"><button type="button" class="video-cover" data-video="${e(row.id)}" aria-label="Play ${e(row.name)} video${row.duration ? ', ' + e(row.duration) : ''}">${row.poster ? `<img src="${e(row.poster)}" alt="" width="1280" height="720" loading="lazy">` : ''}<span class="play-disc" aria-hidden="true">▶</span>${row.duration ? `<span class="duration">${e(row.duration)}</span>` : ''}</button><h4>${e(row.headline || row.name)}</h4><p>${e(row.name)}${row.cat !== 'unspecified' ? ' · ' + e(catLabel(row.cat)) : ''}</p><button type="button" class="text-link" data-video="${e(row.id)}">Watch the learner experience <span aria-hidden="true">↗</span></button></article>`).join('');
+    $('videoGrid').innerHTML = recordsOf('video').map(row => `<article class="video-card"><button type="button" class="video-cover" data-video="${e(row.id)}" aria-label="Play ${e(row.name)} video${row.duration ? ', ' + e(row.duration) : ''}">${row.poster ? `<img src="${e(row.poster)}" alt="" width="1280" height="720" loading="lazy">` : ''}<span class="play-disc" aria-hidden="true">▶</span>${row.duration ? `<span class="duration">${e(row.duration)}</span>` : ''}</button><h4>${e(row.headline || row.name)}</h4><p>${e(row.name)}${row.cat !== 'unspecified' ? ' · ' + e(catLabel(row.cat)) : ''}</p><button type="button" class="text-link" data-video="${e(row.id)}">Watch learner feedback <span aria-hidden="true">↗</span></button></article>`).join('');
     $('voiceNotes').innerHTML = recordsOf('voice').filter(row => /\.(m4a|mp3|wav|ogg)(\?|$)/i.test(row.media)).map(row => `<article class="voice-card">${row.photo ? `<img src="${e(row.photo)}" width="64" height="64" alt="" loading="lazy">` : ''}<div><strong>${e(row.name)}</strong><p>A learner’s voice note${row.duration ? ' · ' + e(row.duration) : ''}</p></div><audio controls preload="none" aria-label="Voice note from ${e(row.name)}"><source src="${e(row.media)}" type="audio/mp4">Your browser cannot play this audio. <a href="${e(row.media)}">Open the voice note</a>.</audio></article>`).join('');
   }
   function render() {
     renderImpact();
     const offers = recordsOf('offer');
     const featured = C.FEATURED.map(key => offers.find(row => row.key === key)).filter(Boolean);
-    $('featuredStories').innerHTML = featured.map(feature).join('') || '<p>More learner journeys will be shared here soon.</p>';
+    $('featuredStories').innerHTML = featured.map(feature).join('') || '<p>Learner stories will appear here when available.</p>';
     // Honor withdrawals and masking in refreshed data, including the initial hero.
     document.querySelectorAll('.hero-story').forEach((card,index) => {
       const row = offers.find(item => item.key === C.HERO[index]);
@@ -58,7 +58,7 @@
         img.alt = row.name;
         card.querySelector('.hero-story-caption strong').textContent = row.role + '.';
         card.querySelector('.hero-story-caption p').textContent = row.name + (row.company ? ' · ' + row.company : '');
-        card.querySelector('.hero-story-caption > span').textContent = row.from ? 'FROM ' + row.from.toUpperCase() : row.city ? 'A NEW CHAPTER IN ' + row.city.toUpperCase() : 'A LEARNER JOURNEY';
+        card.querySelector('.hero-story-caption > span').textContent = row.from ? 'FROM ' + row.from.toUpperCase() : row.city ? 'BASED IN ' + row.city.toUpperCase() : 'A LEARNER JOURNEY';
       }
     });
     renderLibrary(); renderMedia(); setupReveals(); diagnostics();

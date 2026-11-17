@@ -53,9 +53,9 @@ window.SS_CONFIG = {
   FEATURED: ['parimalrajb','santosh','kavimalar'],
   HERO: ['parimalrajb','kavimalar'],
   STORY_COPY: {
-    parimalrajb: { headline: 'From business development to data science.', intro: 'Parimalraj moved from business development into a Data Scientist role at Amvion Labs. His Advanced Data Science & AI learning covered Python, SQL and the foundations of applied AI.' },
-    santosh: { headline: 'A new direction. Within the same company.', intro: 'For Santosh, the next step was within the same company: a move from QA into an AI Engineer role through an internal job posting.' },
-    kavimalar: { headline: 'An analytics journey. A new chapter in France.', intro: 'Kavimalar studied Python, statistics, SQL and Power BI in the Advanced Full Data Analytics program. Her next chapter was an HR Data Apprenticeship at iMobility in France.' }
+    parimalrajb: { headline: 'Parimalraj: Business Development Associate to Data Scientist', intro: 'Parimalraj moved from business development into a Data Scientist role at Amvion Labs. His Advanced Data Science & AI course included Python, SQL, machine learning and deep learning.' },
+    santosh: { headline: 'Santosh: QA to AI Engineer through an internal move', intro: 'Santosh moved from QA to an AI Engineer role at the same company through an internal job posting. In his feedback, he mentions interview questions on RAG and Word2Vec.' },
+    kavimalar: { headline: 'Kavimalar: HR Data Apprenticeship at iMobility', intro: 'Kavimalar studied Python, statistics, SQL and Power BI in the Advanced Full Data Analytics program. She went on to an HR Data Apprenticeship at iMobility in France.' }
   },
   LOCAL_ASSETS: {
     parimalrajb: { photo: 'assets/parimalraj-b.jpg', proof: 'assets/proof/parimalraj-amvion.webp' },

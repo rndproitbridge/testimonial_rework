@@ -106,7 +106,7 @@ export async function validate() {
   check('Generated entry points are identical',built===await read('dist/success-stories.html')&&built===await read('godaddy-upload/SuccessStory/index.html'));
   check('Built HTML runs inline scripts after the page body content',built.indexOf('/* assets/success-stories.js */')>built.indexOf('<footer'));
   const builtDoc=parseHTML(built).document;
-  for(const script of builtDoc.querySelectorAll('script'))new vm.Script(script.textContent);
+  for(const script of builtDoc.querySelectorAll('script')){if(script.type==='application/ld+json')JSON.parse(script.textContent);else new vm.Script(script.textContent);}
   results.push('Embedded script syntax validated');
   const report={passed:results.length,checks:results,limitations:['DOM-based checks only; real-browser layout, keyboard focus trapping, media playback and responsive visual QA still require a browser.']};
   await writeFile(resolve(root,'.preview/validation/report.json'),JSON.stringify(report,null,2)+'\n');

@@ -30,7 +30,7 @@ export async function build({production=false}={}) {
   }
   // Inline scripts do not honor defer: append after the complete document body.
   html=html.replace('</body>',()=>scripts.map((script,index)=>`<script>\n/* ${script} */\n${safeScript(sources[index])}\n</script>`).join('\n')+'\n</body>');
-  if(production)html=html.replace(/\s*<meta name="robots"[^>]*data-review-only>/,'');
+  if(production)html=html.replace(/\s*<meta name="robots"[^>]*data-review-only(?:="")?>/,'');
   const media=new Set([...html.matchAll(/(?:src|href)="(assets\/[^"?#]+)"/g)].map(match=>match[1]));
   ['assets/fonts/OFL.txt','assets/vendor/MOTION-LICENSE.txt','assets/vendor/SOURCES.txt'].forEach(path=>media.add(path));
   for(const logo of Object.values(config.EMPLOYER_LOGOS||{}))media.add(logo.src);
