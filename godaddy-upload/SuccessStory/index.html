@@ -139,7 +139,7 @@ h1{font-size:clamp(72px,5vw,96px)}h2{font-size:clamp(48px,3.2vw,62px)}.header-in
       <div class="container">
         <div class="section-heading"><div><p class="eyebrow">CAREER OUTCOMES</p><h2 id="outcomesTitle">Roles our learners have moved into</h2></div><p class="section-intro">Browse stories about data analyst, data scientist and AI roles. Filter by previous experience to find examples relevant to you.</p></div>
         <div class="outcome-layout"><div class="outcome-list" id="outcomeList"></div><aside class="outcome-aside"><span class="outline-arrow" aria-hidden="true">↗</span><h3>New jobs, apprenticeships and moves within a company.</h3><a class="text-link" href="#stories">Browse learner stories <span aria-hidden="true">↗</span></a></aside></div>
-        <p class="data-note" id="outcomeNote">Counts describe the published career records on this page, grouped by role. They are not organization-wide placement totals.</p>
+        <p class="data-note" id="outcomeNote"></p>
         <div class="background-breakdown"><div><p class="eyebrow">PREVIOUS EXPERIENCE</p><h3>Browse by learner background</h3></div><div id="backgroundCounts" class="background-counts"></div><p class="data-note">Backgrounds follow the shared records. Records without a stated background remain unassigned.</p></div>
         <div class="employer-row"><div class="employer-strip-label"><p>SELECTED EMPLOYERS<br>FROM LEARNER STORIES</p></div><div id="employerNames" class="employer-names" tabindex="0" role="region" aria-label="Selected learner employers. Logos scroll from left to right and pause on focus."></div></div>
       </div>
@@ -627,7 +627,7 @@ window.SS_SNAPSHOT = {"generated":"2026-11-16T11:26:14.966Z","stories":"Publish,
         if (['youtube.com','www.youtube.com','youtu.be'].includes(url.hostname)) { const id = url.hostname === 'youtu.be' ? url.pathname.slice(1) : url.searchParams.get('v'); if (/^[\w-]{11}$/.test(id || '')) embed = `https://www.youtube-nocookie.com/embed/${id}`; }
         if (embed) player = `<iframe src="${e(embed)}" title="${e(row.name)} learner video" allow="fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
       }
-      body += `<div class="dialog-media">${player || '<p>This video is available through the original source below.</p>'}</div><p class="dialog-caption">Playback is optional. Use the player controls to start, pause or adjust the volume.</p>`;
+      body += `<div class="dialog-media">${player || '<p>This video is currently unavailable.</p>'}</div><p class="dialog-caption">Playback is optional. Use the player controls to start, pause or adjust the volume.</p>`;
     } else {
       const details = [['Starting point',row.from],['Learning program',row.program],['Skills / modules',row.modules],['Career outcome',row.type === 'offer' ? row.role : ''],['Employer',row.company],['Location',row.city],['Mentor',row.mentor],['Package shared (LPA)',row.lpa ? String(Number(row.lpa) || row.lpa) : ''],['Offer date as shared',row.date],['Shared context',row.note]];
       body += `<dl class="dialog-facts">${details.filter(([,value])=>value).map(([label,value]) => `<div${label === 'Skills / modules' || label === 'Learning program' ? ' class="full"' : ''}><dt>${e(label)}</dt><dd>${e(value)}</dd></div>`).join('')}</dl>`;
@@ -635,7 +635,6 @@ window.SS_SNAPSHOT = {"generated":"2026-11-16T11:26:14.966Z","stories":"Publish,
       if (row.proof && /\.(webp|png|jpe?g)(\?|$)/i.test(row.proof)) body += `<p class="dialog-caption">The original shared ${row.type === 'review' ? 'review' : 'record'}</p><a class="dialog-proof-link" href="${e(row.proof)}" target="_blank" rel="noopener noreferrer" aria-label="Open shared record image in a new tab"><img class="dialog-proof" src="${e(row.proof)}" alt="Shared ${e(row.type === 'review' ? 'review' : 'career record')} from ${e(row.name)}" loading="lazy"></a>`;
       if (row.masked) body += '<p class="dialog-caption">Personal identifying details have been withheld at the learner’s request.</p>';
     }
-    if (row.original) body += `<p><a class="text-link" href="${e(row.original)}" target="_blank" rel="noopener noreferrer">Open the original source <span aria-hidden="true">↗</span><span class="sr-only"> (new tab)</span></a></p>`;
     body += '</div>';
     $('dialogContent').innerHTML = body;
     if (!$('storyDialog').open) $('storyDialog').showModal();
@@ -645,7 +644,7 @@ window.SS_SNAPSHOT = {"generated":"2026-11-16T11:26:14.966Z","stories":"Publish,
     window.SSAnimations?.dialog($('storyDialog'));
     $('dialogContent').querySelectorAll('img,video').forEach(media => media.addEventListener('error', () => {
       if (media.nextElementSibling?.classList.contains('dialog-error')) return;
-      const notice = document.createElement('p'); notice.className='dialog-error'; notice.textContent='This media could not be loaded. Please use the original source link below.'; media.after(notice);
+      const notice = document.createElement('p'); notice.className='dialog-error'; notice.textContent='This media could not be loaded. Please try again later.'; media.after(notice);
     }, {once:true}));
   }
   function requestDialogClose() { if(window.SSAnimations?.supported)window.SSAnimations.closeDialog($('storyDialog'),()=>$('storyDialog').close());else $('storyDialog').close(); }

@@ -86,7 +86,7 @@
         if (['youtube.com','www.youtube.com','youtu.be'].includes(url.hostname)) { const id = url.hostname === 'youtu.be' ? url.pathname.slice(1) : url.searchParams.get('v'); if (/^[\w-]{11}$/.test(id || '')) embed = `https://www.youtube-nocookie.com/embed/${id}`; }
         if (embed) player = `<iframe src="${e(embed)}" title="${e(row.name)} learner video" allow="fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
       }
-      body += `<div class="dialog-media">${player || '<p>This video is available through the original source below.</p>'}</div><p class="dialog-caption">Playback is optional. Use the player controls to start, pause or adjust the volume.</p>`;
+      body += `<div class="dialog-media">${player || '<p>This video is currently unavailable.</p>'}</div><p class="dialog-caption">Playback is optional. Use the player controls to start, pause or adjust the volume.</p>`;
     } else {
       const details = [['Starting point',row.from],['Learning program',row.program],['Skills / modules',row.modules],['Career outcome',row.type === 'offer' ? row.role : ''],['Employer',row.company],['Location',row.city],['Mentor',row.mentor],['Package shared (LPA)',row.lpa ? String(Number(row.lpa) || row.lpa) : ''],['Offer date as shared',row.date],['Shared context',row.note]];
       body += `<dl class="dialog-facts">${details.filter(([,value])=>value).map(([label,value]) => `<div${label === 'Skills / modules' || label === 'Learning program' ? ' class="full"' : ''}><dt>${e(label)}</dt><dd>${e(value)}</dd></div>`).join('')}</dl>`;
@@ -94,7 +94,6 @@
       if (row.proof && /\.(webp|png|jpe?g)(\?|$)/i.test(row.proof)) body += `<p class="dialog-caption">The original shared ${row.type === 'review' ? 'review' : 'record'}</p><a class="dialog-proof-link" href="${e(row.proof)}" target="_blank" rel="noopener noreferrer" aria-label="Open shared record image in a new tab"><img class="dialog-proof" src="${e(row.proof)}" alt="Shared ${e(row.type === 'review' ? 'review' : 'career record')} from ${e(row.name)}" loading="lazy"></a>`;
       if (row.masked) body += '<p class="dialog-caption">Personal identifying details have been withheld at the learner’s request.</p>';
     }
-    if (row.original) body += `<p><a class="text-link" href="${e(row.original)}" target="_blank" rel="noopener noreferrer">Open the original source <span aria-hidden="true">↗</span><span class="sr-only"> (new tab)</span></a></p>`;
     body += '</div>';
     $('dialogContent').innerHTML = body;
     if (!$('storyDialog').open) $('storyDialog').showModal();
@@ -104,7 +103,7 @@
     window.SSAnimations?.dialog($('storyDialog'));
     $('dialogContent').querySelectorAll('img,video').forEach(media => media.addEventListener('error', () => {
       if (media.nextElementSibling?.classList.contains('dialog-error')) return;
-      const notice = document.createElement('p'); notice.className='dialog-error'; notice.textContent='This media could not be loaded. Please use the original source link below.'; media.after(notice);
+      const notice = document.createElement('p'); notice.className='dialog-error'; notice.textContent='This media could not be loaded. Please try again later.'; media.after(notice);
     }, {once:true}));
   }
   function requestDialogClose() { if(window.SSAnimations?.supported)window.SSAnimations.closeDialog($('storyDialog'),()=>$('storyDialog').close());else $('storyDialog').close(); }
