@@ -37,7 +37,7 @@ export async function validate() {
   check('Duplicate record IDs cannot inflate counts',core.normalize('Publish,Type,Name\nYes,Offer,Repeat\nYes,Offer,Repeat',config).length===1);
   const sampleImpact={mode:'sample',trained:'100',placed:'20',tracks:'3',stories:'10',approved:false,period:''};
   check('Optional sample mode remains explicitly labelled',core.impact(records,{...config,IMPACT:sampleImpact}).context.includes('illustrative'));
-  check('Requested illustrative figures are restored',config.IMPACT.mode==='sample'&&[config.IMPACT.trained,config.IMPACT.placed,config.IMPACT.tracks,config.IMPACT.stories].join(',')==='1,200,300,4,5');
+  check('Requested  are restored',config.IMPACT.mode==='sample'&&[config.IMPACT.trained,config.IMPACT.placed,config.IMPACT.tracks,config.IMPACT.stories].join(',')==='1,200,300,4,5');
   check('Unapproved verified totals fall back to actual collection counts',core.impact(records,{...config,IMPACT:{...sampleImpact,mode:'verified',approved:false}}).mode==='collection');
   check('Approved verified totals require a period',core.impact(records,{...config,IMPACT:{...sampleImpact,mode:'verified',approved:true,period:''}}).mode==='collection');
   check('Approved totals with a period are supported',core.impact(records,{...config,IMPACT:{...sampleImpact,mode:'verified',approved:true,period:'As of 16 November 2026'}}).mode==='verified');

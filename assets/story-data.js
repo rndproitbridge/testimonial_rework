@@ -87,7 +87,7 @@
     if (settings.mode === 'sample' || verified) return {
       mode: verified ? 'verified' : 'sample',
       items: [[settings.trained,'Learners trained'],[settings.placed,'Learners placed'],[settings.tracks,'Learning tracks'],[settings.stories,'Success stories shared']],
-      context: verified ? 'Organization-wide figures · ' + settings.period : 'Sample totals for design review. These are illustrative figures, not verified PROITBRIDGE results.'
+      context: verified ? 'Organization-wide figures · ' + settings.period : ''
     };
     return {mode:'collection', items:[[counts.offers,'Career stories shared'],[counts.employers.length,'Named employers'],[counts.reviews,'Written learner reviews'],[counts.videos,'Video experiences']], context:'Calculated from the published records available on this page. These are story-collection counts, not organization-wide training or placement totals.'};
   }

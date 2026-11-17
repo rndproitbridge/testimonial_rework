@@ -2,7 +2,7 @@
 
 Updated 17 November 2026.
 
-Replaced generic slogans with descriptive headings, straightforward course explanations and specific learner outcomes. Original testimonial text and the Google Reviews widget remain unchanged. Requested illustrative figures remain 1,200, 300, 4 and 5.
+Replaced generic slogans with descriptive headings, straightforward course explanations and specific learner outcomes. Original testimonial text and the Google Reviews widget remain unchanged. Requested  remain 1,200, 300, 4 and 5.
 
 Search intent: PROITBRIDGE reviews, PROITBRIDGE success stories, and learner experiences with data analytics, data science and AI training. These are editorial topic choices, not keyword-volume findings.
 

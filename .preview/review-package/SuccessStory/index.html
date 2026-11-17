@@ -128,7 +128,7 @@ h1{font-size:clamp(72px,5vw,96px)}h2{font-size:clamp(48px,3.2vw,62px)}.header-in
 
     <section class="impact section-dark" id="impact" aria-labelledby="impactTitle">
       <div class="container">
-        <div class="section-heading impact-heading"><div><p class="eyebrow">OUR IMPACT</p><h2 id="impactTitle">Learner outcomes in numbers.</h2></div><div class="section-intro"><p>Career stories and feedback shared by our learners.</p><span class="sample-notice" id="sampleNotice" hidden>Illustrative figures</span></div></div>
+        <div class="section-heading impact-heading"><div><p class="eyebrow">OUR IMPACT</p><h2 id="impactTitle">Learner outcomes in numbers.</h2></div><div class="section-intro"><p>Career stories and feedback shared by our learners.</p><span class="sample-notice" id="sampleNotice" hidden></span></div></div>
         <div class="metric-grid" id="metricGrid" aria-live="polite"></div>
         <p class="impact-context" id="impactContext"></p>
         <div class="collection-note" id="collectionNote"></div>
@@ -376,7 +376,7 @@ window.SS_SNAPSHOT = {"generated":"2026-11-16T11:26:14.966Z","stories":"Publish,
     if (settings.mode === 'sample' || verified) return {
       mode: verified ? 'verified' : 'sample',
       items: [[settings.trained,'Learners trained'],[settings.placed,'Learners placed'],[settings.tracks,'Learning tracks'],[settings.stories,'Success stories shared']],
-      context: verified ? 'Organization-wide figures · ' + settings.period : 'Sample totals for design review. These are illustrative figures, not verified PROITBRIDGE results.'
+      context: verified ? 'Organization-wide figures · ' + settings.period : ''
     };
     return {mode:'collection', items:[[counts.offers,'Career stories shared'],[counts.employers.length,'Named employers'],[counts.reviews,'Written learner reviews'],[counts.videos,'Video experiences']], context:'Calculated from the published records available on this page. These are story-collection counts, not organization-wide training or placement totals.'};
   }

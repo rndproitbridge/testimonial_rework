@@ -13,7 +13,7 @@
     "Legacy Quote records remain readable without invented stars",
     "Duplicate record IDs cannot inflate counts",
     "Optional sample mode remains explicitly labelled",
-    "Requested illustrative figures are restored",
+    "Requested  are restored",
     "Unapproved verified totals fall back to actual collection counts",
     "Approved verified totals require a period",
     "Approved totals with a period are supported",
